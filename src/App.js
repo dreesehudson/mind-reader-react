@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css';
 import { Button, Card, CardBody, CardFooter, Col, Row, } from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,11 +8,26 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [view, setView] = useState(0)
   const [symbols, setSymbols] = useState(['😎', '🥳', '😆', '🙃', '😄', '🤣', '🤓', '😏'])
-  const [chosenSymbol, setChosenSymbol] = useState([])
+  const [chosenSymbol, setChosenSymbol] = useState("")
   const [randomSymbol, setRandomSymbol] = useState("")
   const [list, setList] = useState([])
 
+  useEffect(() => {
+    generateList()
+  }, [view])
 
+  function generateList() {
+    for (let i = 0; i <= 99; i++) {
+      if (i % 9) {
+        //pick random symbol to assign to this number
+        setList([...list, (i + " --- " + randomSymbol)]);
+      }
+      else {
+        //assign the 'right answer' to this number
+        setList([...list, (i + " --- " + chosenSymbol)]);
+      }
+    }
+  }
 
   // setChosenSymbol(symbols[Math.floor(Math.random()*symbols.length)]);
   // console.log(chosenSymbol)
@@ -20,10 +35,8 @@ function App() {
   // for (let i = 0; i < 100; i++) {
   //   if (i % 9) {
   //     setRandomSymbol(symbols[Math.floor(Math.random() * symbols.length)]);
-  //     setList([...list, (i + " --- " + randomSymbol)]);
   //   }
   //   else {
-  //     setList([...list, (i + " --- " + chosenSymbol)]);
   //   }
   // }
 
@@ -62,9 +75,11 @@ function App() {
           {view === 4 &&
             <>
               <h1 className='display-3'>Find your new number and symbol.</h1>
-              {list.map((item, idx) =>
-                <p key={idx}>{item}</p>
-              )}
+              {
+                list.map((item, idx) =>
+                  <p key={idx}>{item}</p>
+                )
+              }
             </>
           }
           {view === 5 &&
