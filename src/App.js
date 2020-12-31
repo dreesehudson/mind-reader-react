@@ -2,26 +2,30 @@ import React, { useState } from 'react'
 import './App.css';
 import { Button, Card, CardBody, CardFooter, Col, Row, } from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowCircleLeft, faArrowCircleRight, faUndo } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [view, setView] = useState(0)
   const [symbols, setSymbols] = useState(['😎', '🥳', '😆', '🙃', '😄', '🤣', '🤓', '😏'])
-  const [chosenSymbol, setChosenSymbol] = useState("")
+  const [chosenSymbol, setChosenSymbol] = useState([])
   const [randomSymbol, setRandomSymbol] = useState("")
   const [list, setList] = useState([])
 
-  setChosenSymbol(symbols[Math.floor(Math.random() * symbols.length)])
-  for (let i = 0; i < 100; i++) {
-    if (i % 9) {
-      setRandomSymbol(symbols[Math.floor(Math.random() * symbols.length)]);
-      setList([...list, (i + " --- " + randomSymbol)]);
-    }
-    else {
-      setList([...list, (i + " --- " + chosenSymbol)]);
-    }
-  }
+
+
+  // setChosenSymbol(symbols[Math.floor(Math.random()*symbols.length)]);
+  // console.log(chosenSymbol)
+  // setChosenSymbol(symbols[Math.floor(Math.random() * symbols.length)])
+  // for (let i = 0; i < 100; i++) {
+  //   if (i % 9) {
+  //     setRandomSymbol(symbols[Math.floor(Math.random() * symbols.length)]);
+  //     setList([...list, (i + " --- " + randomSymbol)]);
+  //   }
+  //   else {
+  //     setList([...list, (i + " --- " + chosenSymbol)]);
+  //   }
+  // }
 
   function nextView() {
     setView(view + 1)
@@ -29,6 +33,10 @@ function App() {
 
   function lastView() {
     setView(view - 1)
+  }
+
+  function resetGame() {
+    setView(0)
   }
 
   return (
@@ -69,15 +77,21 @@ function App() {
           <Row>
             <Col>
               {view !== 0 &&
-                <Button className='bg-white border-white'>
+                <Button className='bg-white border-white rounded-circle p-0 m-3'>
                   <FontAwesomeIcon className='fa-5x text-secondary' icon={faArrowCircleLeft} onClick={() => lastView()} />
                 </Button>
               }
             </Col>
             <Col>
-              <Button className='bg-white border-white'>
-                <FontAwesomeIcon className='fa-5x text-primary' icon={faArrowCircleRight} onClick={() => nextView()} />
-              </Button>
+              {view === 5 ?
+                <Button className='bg-white border-white rounded-circle p-3'>
+                  <FontAwesomeIcon className='fa-5x text-primary' icon={faUndo} onClick={() => resetGame()} />
+                </Button>
+                :
+                <Button className='bg-white border-white rounded-circle p-0 m-3'>
+                  <FontAwesomeIcon className='fa-5x text-primary' icon={faArrowCircleRight} onClick={() => nextView()} />
+                </Button>
+              }
             </Col>
           </Row>
         </CardFooter>
