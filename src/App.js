@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './App.css';
-import { Button, Card, CardBody, CardFooter, Col, Row, } from 'reactstrap'
+import { Button, Card, CardBody, CardFooter, Col, ListGroup, Row, ListGroupItem } from 'reactstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowCircleLeft, faArrowCircleRight, faUndo } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,37 +8,31 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [view, setView] = useState(0)
   const [symbols, setSymbols] = useState(['😎', '🥳', '😆', '🙃', '😄', '🤣', '🤓', '😏'])
-  const [chosenSymbol, setChosenSymbol] = useState("")
-  const [randomSymbol, setRandomSymbol] = useState("")
+  const [chosenSymbol, setChosenSymbol] = useState(symbols[Math.floor(Math.random() * symbols.length)])
   const [list, setList] = useState([])
+  const [reset, setReset] = useState(0)
 
   useEffect(() => {
     generateList()
-  }, [view])
+  }, [])
 
   function generateList() {
+    setList([])
+    let proxy = []
     for (let i = 0; i <= 99; i++) {
       if (i % 9) {
+        let random = symbols[Math.floor(Math.random() * symbols.length)]
+        proxy.push([i + " ---> " + random])
         //pick random symbol to assign to this number
-        setList([...list, (i + " --- " + randomSymbol)]);
+        setList(proxy);
       }
       else {
         //assign the 'right answer' to this number
-        setList([...list, (i + " --- " + chosenSymbol)]);
+        proxy.push([i + " ---> " + chosenSymbol])
+        setList(proxy);
       }
     }
   }
-
-  // setChosenSymbol(symbols[Math.floor(Math.random()*symbols.length)]);
-  // console.log(chosenSymbol)
-  // setChosenSymbol(symbols[Math.floor(Math.random() * symbols.length)])
-  // for (let i = 0; i < 100; i++) {
-  //   if (i % 9) {
-  //     setRandomSymbol(symbols[Math.floor(Math.random() * symbols.length)]);
-  //   }
-  //   else {
-  //   }
-  // }
 
   function nextView() {
     setView(view + 1)
@@ -50,12 +44,13 @@ function App() {
 
   function resetGame() {
     setView(0)
+    setReset(reset + 1)
   }
 
   return (
     <div className="App">
       <Card className='border-0'>
-        <CardBody className='mt-5 border-0'>
+        <CardBody className='mt-5 mb-5 pb-5 overflow-auto border-0'>
           {view === 0 &&
             <h1 className='display-3'>I can read your mind.</h1>}
           {view === 1 &&
@@ -75,11 +70,13 @@ function App() {
           {view === 4 &&
             <>
               <h1 className='display-3'>Find your new number and symbol.</h1>
-              {
-                list.map((item, idx) =>
-                  <p key={idx}>{item}</p>
-                )
-              }
+              <ListGroup>
+                {
+                  list.map((item, idx) =>
+                    <ListGroupItem key={idx}>{item}</ListGroupItem>
+                  )
+                }
+              </ListGroup>
             </>
           }
           {view === 5 &&
@@ -88,7 +85,7 @@ function App() {
             </>
           }
         </CardBody>
-        <CardFooter className='bg-white border-0 fixed-bottom mb-5'>
+        <CardFooter className='bg-white border-0 fixed-bottom mt-5 pt-0'>
           <Row>
             <Col>
               {view !== 0 &&
